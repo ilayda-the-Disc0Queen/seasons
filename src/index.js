@@ -23,13 +23,16 @@ class App extends React.Component {
   render() {
     // render gets called A LOT so we took the geolocation stuff
     // out so it doesn't slow down the page
-    return (
-      <div>
-        Lattitude = {this.state.lat}
-        <br/>
-        Error: {this.state.errorMessage}
-      </div>
-    );
+    if (this.state.errorMessage && !this.state.lat) {
+      return <div>Error: {this.state.errorMessage}</div>;
+    }
+
+    if (!this.state.errorMessage && this.state.lat) {
+      return <div>Lattitude: {this.state.lat}</div>;
+    }
+
+    return <div>Loading! Please wait...</div>;
+
   };
 };
 
