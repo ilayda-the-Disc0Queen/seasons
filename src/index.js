@@ -1,25 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
+  // babel changes the line below into the component method we had before
+  state = { lat: null, errorMessage: '' };
 
-    // THIS IS THE ONLY TIME we do direct assignment
-    // to this.state
-    this.state = { lat: null, errorMessage: '' }; // needs to be initialised. null is the standard default value
-
-    window.navigator.geolocation.getCurrentPosition(
-    position => {
-      // to update the state and make it refresh itself
-      // you HAVE to use the setState() function!!!!!
-      this.setState({ lat: position.coords.latitude });
-    },
-    err => {
-      this.setState({ errorMessage: err.message }) // you can see what's in err by console logging it first
-    }
+componentDidMount() {
+  window.navigator.geolocation.getCurrentPosition(
+    position => this.setState({ lat: position.coords.latitude }),
+    err => this.setState({ errorMessage: err.message })
     );
-  }
+}
+
+componentDidUpdate() {
+  console.log('My component was just updated - it rerendered!')
+}
+
   render() {
     // render gets called A LOT so we took the geolocation stuff
     // out so it doesn't slow down the page
@@ -28,7 +25,7 @@ class App extends React.Component {
     }
 
     if (!this.state.errorMessage && this.state.lat) {
-      return <div>Lattitude: {this.state.lat}</div>;
+      return <SeasonDisplay lat={this.state.lat} />
     }
 
     return <div>Loading! Please wait...</div>;
